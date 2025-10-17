@@ -50,7 +50,7 @@ class AWSExporter:
         """
         启动HTTP服务器
         """
-        port = self.config.get('exporter.port', 9090)
+        port = self.config.get('exporter.port', 9099)
         address = self.config.get('exporter.address', '0.0.0.0')
         
         self.logger.info(f"Starting AWS API Exporter on {address}:{port}")
@@ -59,7 +59,7 @@ class AWSExporter:
         # 保持进程运行
         try:
             while True:
-                time.sleep(1)
+                time.sleep(1800)
         except KeyboardInterrupt:
             self.logger.info("Exporter stopped")
 

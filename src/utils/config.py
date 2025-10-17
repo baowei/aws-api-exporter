@@ -21,7 +21,7 @@ class Config:
                 'secret_access_key': os.environ.get('AWS_SECRET_ACCESS_KEY', None),
             },
             'exporter': {
-                'port': int(os.environ.get('EXPORTER_PORT', 9090)),
+                'port': int(os.environ.get('EXPORTER_PORT', 9099)),
                 'address': os.environ.get('EXPORTER_ADDRESS', '0.0.0.0'),
                 'metrics_path': os.environ.get('EXPORTER_METRICS_PATH', '/metrics'),
                 'collectors': {

@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  aws-api-exporter:
+    container_name: aws-api-exporter
+    # 本地构建镜像
+    image: ghcr.io/baowei/aws-api-exporter:v1.0.1@sha256:e03d945b79c663ef7d662efe2a8ff9a56b100d0bb629695f97f72670e4399fee
+    env_file:
+      - /etc/default/aws-api-exporter.variables
+    ports:
+      - "${EXPORTER_PORT:-9099}:9099"
+    restart: unless-stopped
