@@ -25,20 +25,20 @@ class RDSInstanceCollector(BaseCollector):
         storage_size = GaugeMetricFamily(
             'aws_rds_allocated_storage_gb',
             'Allocated storage size of RDS instance in GB',
-            labels=['db_instance_identifier', 'db_instance_class', 'engine', 'availability_zone', 'status']
+            labels=['dbinstance_identifier', 'db_instance_class', 'engine', 'availability_zone', 'status']
         )
         
         # 创建RDS IOPS指标
         provisioned_iops = GaugeMetricFamily(
             'aws_rds_provisioned_iops',
             'Provisioned IOPS of RDS instance',
-            labels=['db_instance_identifier', 'db_instance_class', 'engine', 'availability_zone', 'status']
+            labels=['dbinstance_identifier', 'db_instance_class', 'engine', 'availability_zone', 'status']
         )
         
         paginator = self.client.get_paginator('describe_db_instances')
         for page in paginator.paginate():
             for instance in page.get('DBInstances', []):
-                db_instance_identifier = instance.get('DBInstanceIdentifier')
+                dbinstance_identifier = instance.get('DBInstanceIdentifier')
                 db_instance_class = instance.get('DBInstanceClass')
                 engine = instance.get('Engine')
                 availability_zone = instance.get('AvailabilityZone')
@@ -46,14 +46,14 @@ class RDSInstanceCollector(BaseCollector):
                 
                 # 添加存储大小指标
                 storage_size.add_metric(
-                    [db_instance_identifier, db_instance_class, engine, availability_zone, status],
+                    [dbinstance_identifier, db_instance_class, engine, availability_zone, status],
                     instance.get('AllocatedStorage', 0)
                 )
                 
                 # 添加IOPS指标
                 iops = instance.get('Iops', 0)
                 provisioned_iops.add_metric(
-                    [db_instance_identifier, db_instance_class, engine, availability_zone, status],
+                    [dbinstance_identifier, db_instance_class, engine, availability_zone, status],
                     iops
                 )
         
