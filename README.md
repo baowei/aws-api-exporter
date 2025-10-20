@@ -6,6 +6,8 @@
 - EC2卷大小和IOPS指标
 - RDS实例分配存储大小和IOPS指标
 
+需要配合cloudwatch_exporter一起使用，才能收集到EC2卷和RDS实例的指标。
+
 ## 功能特点
 
 - 模块化设计，易于扩展
@@ -96,6 +98,13 @@ scrape_configs:
       - targets: ['localhost:9099']
 ```
 
+```
+rules：
+- record: aws_ebs_volume_iops_usage_percent
+  expr: '100 * ((sum by (volume_id) (aws_ebs_volume_read_ops_average + aws_ebs_volume_write_ops_average)) / 10 / on(volume_id) group_left(name) sum by (volume_id, name) (aws_ec2_volume_iops))'
+- record: aws_rds_storage_used_percent
+  expr: '100 * (1 - (aws_rds_free_storage_space_maximum / on(dbinstance_identifier) group_left(db_instance_identifier) (aws_rds_allocated_storage_gb * 1024 * 1024 * 1024)))'
+```
 ## 扩展
 
 如需添加新的收集器，只需在`src/collectors`目录下创建新的收集器类，并在`src/exporter.py`中注册即可。
